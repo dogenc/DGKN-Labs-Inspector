@@ -1,0 +1,94 @@
+<UserControl x:Class="DGKNInspector.Views.ProgramsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Werkzeugleiste -->
+        <Grid Grid.Row="0" Margin="0,0,0,14">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0" Height="34">
+                <TextBox x:Name="SearchBox" Style="{StaticResource SearchBox}" TextChanged="SearchBox_TextChanged"/>
+                <TextBlock x:Name="SearchHint" Text="Suche: Programm, Firma, Land…"
+                           Foreground="{StaticResource Secondary}" FontSize="13"
+                           IsHitTestVisible="False" VerticalAlignment="Center" Margin="12,0,0,0"/>
+            </Grid>
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="12,0,0,0" VerticalAlignment="Center">
+                <ToggleButton x:Name="UnsignedOnly" Style="{StaticResource Toggle}" Height="34"
+                              Content="Nur unsigniert" Click="Filter_Changed"/>
+                <ToggleButton x:Name="ProblemsOnly" Style="{StaticResource Toggle}" Height="34" Margin="8,0,0,0"
+                              Content="Nur Auffällige" Click="Filter_Changed"
+                              ToolTip="Nur unsignierte oder ungültig signierte Programme."/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                <Button Style="{StaticResource PillButton}" Height="34"
+                        Content="⇩ CSV" Click="Export_Click" Margin="0,0,8,0"
+                        ToolTip="Aktuelle (gefilterte) Liste als CSV speichern."/>
+                <Button Style="{StaticResource AccentButton}" Height="34"
+                        Content="Neu scannen" Click="Refresh_Click"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Tabelle -->
+        <Border Grid.Row="1" Style="{StaticResource CardBorder}">
+            <Grid>
+                <DataGrid x:Name="Table" Style="{StaticResource Table}" RowHeight="54"
+                          MouseDoubleClick="Table_MouseDoubleClick">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="PROGRAMM" Width="320">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <Border Width="32" Height="32" Margin="0,0,12,0"
+                                                Background="{StaticResource Bg}" CornerRadius="7">
+                                            <Image Source="{Binding Icon}" Width="24" Height="24"
+                                                   RenderOptions.BitmapScalingMode="HighQuality"/>
+                                        </Border>
+                                        <StackPanel VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Name}" FontWeight="SemiBold"
+                                                       Foreground="{StaticResource Text}" TextTrimming="CharacterEllipsis"
+                                                       MaxWidth="250"/>
+                                            <TextBlock Text="{Binding Version}" FontSize="11"
+                                                       Foreground="{StaticResource Secondary}"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTextColumn Header="FIRMA" Binding="{Binding Company}" Width="200"/>
+                        <DataGridTemplateColumn Header="HERKUNFT" Width="160" CellTemplate="{StaticResource CountryCell}"/>
+                        <DataGridTemplateColumn Header="SIGNATUR" Width="160" CellTemplate="{StaticResource SignatureCell}"/>
+                        <DataGridTextColumn Header="INSTALLIERT" Binding="{Binding InstallDate}" Width="100"/>
+                        <DataGridTextColumn Header="GRÖSSE" Binding="{Binding SizeText}" Width="90"/>
+                        <DataGridTextColumn Header="SPEICHERORT" Binding="{Binding Location}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <TextBlock x:Name="EmptyText" Text="Wird gescannt…" Foreground="{StaticResource Secondary}"
+                           HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="14"
+                           Visibility="Collapsed"/>
+            </Grid>
+        </Border>
+
+        <!-- Statusleiste -->
+        <Grid Grid.Row="2" Margin="4,12,4,0">
+            <TextBlock x:Name="StatusText" Foreground="{StaticResource Secondary}" FontSize="11"
+                       VerticalAlignment="Center"
+                       Text="Doppelklick öffnet den Programmordner. Firma &amp; Land stammen aus der digitalen Signatur."/>
+            <TextBlock HorizontalAlignment="Right" Foreground="{StaticResource Secondary}" FontSize="11"
+                       Text="Flaggen: flagcdn.com · lokal gecacht"/>
+        </Grid>
+    </Grid>
+</UserControl>

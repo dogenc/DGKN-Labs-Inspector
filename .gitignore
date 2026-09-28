@@ -1,0 +1,15 @@
+# Build-Ausgaben
+bin/
+obj/
+publish/
+
+# Visual Studio / Rider / VS Code
+.vs/
+.idea/
+.vscode/
+*.user
+*.suo
+
+# Exporte und lokale Dateien (können persönliche Daten enthalten)
+*.csv
+*.log
